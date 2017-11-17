@@ -15,8 +15,14 @@ const ModelType = new GraphQLObjectType({
   name: 'Model',
   description: 'Car model',
   fields: () => ({
-    id: { type: new GraphQLNonNull(GraphQLString) },
-    makeId: { type: new GraphQLNonNull(GraphQLString) },
+    id: {
+      type: new GraphQLNonNull(GraphQLString),
+      resolve: model => model.id
+    },
+    makeId: {
+      type: new GraphQLNonNull(GraphQLString),
+      resolve: model => model.makeId
+    },
     name: { type: new GraphQLNonNull(GraphQLString) },
     price: { type: GraphQLFloat },
     imageUrl: { type: GraphQLString }
@@ -41,30 +47,42 @@ const CarOfTheWeekType = new GraphQLObjectType({
   })
 });
 
-const RootType = new GraphQLObjectType({
-  name: 'CarSchema',
-  description: 'Root schema for car app',
+const ViewerType = new GraphQLObjectType({
+  name: 'Viewer',
+  description: 'Root field',
   fields: () => ({
+    carOfTheWeek: {
+      type: CarOfTheWeekType,
+      description: 'Car of the week'
+    },
     makes: {
       type: new GraphQLList(MakeType),
-      description: 'All makes',
-      resolve: function() {
-        return Makes
-      }
+      description: 'All makes'
     },
     models: {
       type: new GraphQLList(ModelType),
       description: 'All models',
-      resolve: function() {
-        return Models
+      args: {
+        id : { type: GraphQLString }
+      },
+      resolve: (obj, args) => {
+        if (args.id) {
+          return Models.filter(model => model.id === args.id);
+        }
+        return Models;
       }
-    },
-    carOfTheWeek: {
-      type: CarOfTheWeekType,
-      description: 'Car of the week',
-      resolve: function() {
-        return CarOfTheWeek
-      }
+    }
+  })
+})
+
+const RootType = new GraphQLObjectType({
+  name: 'CarSchema',
+  description: 'Root schema for car app',
+  fields: () => ({
+    viewer: {
+      type: ViewerType,
+      description: 'Root field',
+      resolve: obj => obj
     }
   })
 });

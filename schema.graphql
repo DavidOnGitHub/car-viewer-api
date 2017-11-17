@@ -10,14 +10,8 @@ type CarOfTheWeekType {
 
 # Root schema for car app
 type CarSchema {
-  # All makes
-  makes: [Make]
-
-  # All models
-  models: [Model]
-
-  # Car of the week
-  carOfTheWeek: CarOfTheWeekType
+  # Root field
+  viewer: Viewer
 }
 
 # Car make
@@ -33,4 +27,16 @@ type Model {
   name: String!
   price: Float
   imageUrl: String
+}
+
+# Root field
+type Viewer {
+  # Car of the week
+  carOfTheWeek: CarOfTheWeekType
+
+  # All makes
+  makes: [Make]
+
+  # All models
+  models(id: String): [Model]
 }
