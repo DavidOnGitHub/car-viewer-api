@@ -1,0 +1,36 @@
+schema {
+  query: CarSchema
+}
+
+# Car of the week
+type CarOfTheWeekType {
+  modelId: String!
+  review: String
+}
+
+# Root schema for car app
+type CarSchema {
+  # All makes
+  makes: [Make]
+
+  # All models
+  models: [Model]
+
+  # Car of the week
+  carOfTheWeek: CarOfTheWeekType
+}
+
+# Car make
+type Make {
+  id: String!
+  name: String!
+}
+
+# Car model
+type Model {
+  id: String!
+  makeId: String!
+  name: String!
+  price: Float
+  imageUrl: String
+}
